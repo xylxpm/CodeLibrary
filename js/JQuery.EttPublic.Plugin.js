@@ -605,6 +605,135 @@
                 }
             }
             return "";
+        },
+
+        SetUrlParam: function (para_name, para_value, url) {
+            var strNewUrl = new String();
+            var strUrl = url;
+            if (strUrl.indexOf("?") != -1) {
+                strUrl = strUrl.substr(strUrl.indexOf("?") + 1);
+                //alert(strUrl);
+                if (strUrl.toLowerCase().indexOf(para_name.toLowerCase()) == -1) {
+                    strNewUrl = url + "&" + para_name + "=" + para_value;
+                    return strNewUrl;
+                } else {
+                    var aParam = strUrl.split("&");
+                    //alert(aParam.length);
+                    for (var i = 0; i < aParam.length; i++) {
+                        if (aParam[i].substr(0, aParam[i].indexOf("=")).toLowerCase() == para_name.toLowerCase()) {
+                            aParam[i] = aParam[i].substr(0, aParam[i].indexOf("=")) + "=" + para_value;
+                        }
+                    }
+
+                    strNewUrl = url.substr(0, url.indexOf("?") + 1) + aParam.join("&");
+                    // alert(strNewUrl);
+                    return strNewUrl;
+                }
+
+            } else {
+                strUrl += "?" + para_name + "=" + para_value;
+                //alert(strUrl);
+                return strUrl
+            }
+        },
+
+        GetRequest: function (paramName) {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        },
+
+        WhichBrowser: function () {
+            var agt = navigator.userAgent.toLowerCase();
+            if (agt.indexOf("opera") != -1) return 'Opera';
+            if (agt.indexOf("staroffice") != -1) return 'Star Office';
+            if (agt.indexOf("webtv") != -1) return 'WebTV';
+            if (agt.indexOf("beonex") != -1) return 'Beonex';
+            if (agt.indexOf("chimera") != -1) return 'Chimera';
+            if (agt.indexOf("netpositive") != -1) return 'NetPositive';
+            if (agt.indexOf("phoenix") != -1) return 'Phoenix';
+            if (agt.indexOf("firefox") != -1) return 'Firefox';
+            if (agt.indexOf("chrome") != -1) return 'chrome';
+            if (agt.indexOf("safari") != -1) return 'Safari';
+            if (agt.indexOf("skipstone") != -1) return 'SkipStone';
+            if (agt.indexOf("msie") != -1) return 'Internet Explorer';
+            if (agt.indexOf("netscape") != -1) return 'Netscape';
+            if (agt.indexOf("mozilla/5.0") != -1) return 'Mozilla';
+            if (agt.indexOf('\/') != -1) {
+                if (agt.substr(0, agt.indexOf('\/')) != 'mozilla') {
+                    return navigator.userAgent.substr(0, agt.indexOf('\/'));
+                }
+                else return 'Netscape';
+            } else if (agt.indexOf(' ') != -1)
+                return navigator.userAgent.substr(0, agt.indexOf(' '));
+            else return navigator.userAgent;
+        },
+
+        UItoTop: function (options) {
+            var defaults = {
+                min: 200,
+                inDelay: 600,
+                outDelay: 400,
+                containerID: 'toTop',
+                containerHoverID: 'reTop',
+                scrollSpeed: 300,
+                easingType: 'linear'
+            };
+            var settings = $.extend(defaults, options);
+            var containerIDhash = '#' + settings.containerID;
+            $(containerIDhash).hide().click(function () {
+                $('html, body').animate({ scrollTop: 0 }, settings.scrollSpeed, settings.easingType);
+                $(this).stop().animate({}, settings.inDelay, settings.easingType);
+                return false;
+            });
+
+            if ($(window).scrollTop() > settings.min) {
+                $(containerIDhash).fadeIn(settings.inDelay);
+            }
+            $(window).scroll(function () {
+                var sd = $(window).scrollTop();
+                if (sd > settings.min) {
+                    $(containerIDhash).fadeIn(settings.inDelay);
+                } else {
+                    $(containerIDhash).fadeOut(settings.Outdelay);
+                }
+            });
+        },
+
+        FollowingRoll: function (options) {
+            var defaults = {
+                conTopHeight: 250,/*滚动容器与页面顶部的距离*/
+                conAfterTopHeight: 105,/*滚动容器之后的容器与滚动容器直接的高*/
+                container: $('.js_menudiv'),/*需要跟随的容器*/
+                containerAfter: $(".goods_tab")/*滚动容器之后的容器*/
+            };
+            var settings = $.extend(defaults, options);
+            $(window).scroll(function () {    //滚动
+                var _scroll = $(window).scrollTop();  //滚动条高度
+                if (_scroll >= settings.conTopHeight) {    //判断当大于等于对象的offsetTop的时候
+                    if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) { //针对IE6的判断
+                        settings.container.css({ 'top': _scroll - settings.conTopHeight, 'z-index': '90' });
+                    } else {
+                        settings.container.css({ 'position': 'fixed', 'top': '0', 'z-index': '90' });
+                        settings.containerAfter.css("margin-top", settings.conAfterTopHeight);
+                    }
+                } else {
+                    if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) { //针对IE6的判断
+                        settings.container.css({ 'top': '0' });
+                    } else {
+                        settings.container.css({ 'position': 'relative' });
+                        settings.containerAfter.css("margin-top", 0);
+                    }
+                }
+            });
+
         }
 
     })
