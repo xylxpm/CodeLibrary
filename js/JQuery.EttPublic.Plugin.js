@@ -333,7 +333,7 @@
                                     }
                                 }
                             }
-                        }else if (d.result == 3) {
+                        } else if (d.result == 3) {
                             $(Defaults.tableContainer).css("background", "url(" + Defaults.imageUrl + ") no-repeat center center");
                         }
                         else {
@@ -555,6 +555,56 @@
                 }
             });
 
+        },
+
+        /* 动态加载css和js文件 */
+        LoadJsCssFile: function (options) {
+            var Defaults = {
+                filename: '',
+                filetype: ''
+            };
+            Defaults = $.extend(Defaults, options);
+            if (Defaults.filetype == "js") {
+                var fileref = document.createElement('script');
+                fileref.setAttribute("type", "text/javascript");
+                fileref.setAttribute("src", Defaults.filename);
+            } else if (filetype == "css") {
+                var fileref = document.createElement('link');
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", Defaults.filename);
+            }
+            if (typeof fileref != "undefined") {
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+        },
+
+        /* 取得js文件后参数值 */
+        GetJSQueryString: function (paramName) {
+            var Defaults = {
+                paramName: ''
+            };
+            Defaults = $.extend(Defaults, options);
+            var tt
+            var jsFileName = Defaults.paramName;
+            var rName = new RegExp(jsFileName + "(\\?(.*))?$")
+            var jss = document.getElementsByTagName('script');
+            for (var i = 0; i < jss.length; i++) {
+                var j = jss[i];
+                if (j.src && j.src.match(rName)) {
+                    var oo = j.src.match(rName)[2];
+                    if (oo && (t = oo.match(/([^&=]+)=([^=&]+)/g))) {
+                        for (var l = 0; l < t.length; l++) {
+                            r = t[l];
+                            tt = r.match(/([^&=]+)=([^=&]+)/);
+                            if (tt) {
+                                return tt;
+                            }
+                        }
+                    }
+                }
+            }
+            return "";
         }
 
     })
