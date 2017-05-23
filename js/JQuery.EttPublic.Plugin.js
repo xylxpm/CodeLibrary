@@ -3,7 +3,7 @@
  * Date: 2017.05.23
  * Copyright: Copyright (c) 2016 www.etiantian.com
  * @ author : 徐嫣
- * @ vrsion : 1.00
+ * @ version : 1.00
  */
 
 (function ($) {
