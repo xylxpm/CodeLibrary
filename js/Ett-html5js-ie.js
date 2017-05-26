@@ -167,3 +167,64 @@ function IEVersion() {
         return "-1";//非IE
     }
 }
+
+
+/*—————————————————————————————————————————————————————————————————以下代码可以判断ie11—————————————————————————————————————————————————————————————————————————————————————*/
+/**
+ * Usually used browser compatibility.
+ * Get browser name agent version.
+ * return browser name and version.
+ * return eg：ie9.0、ie11.0、firefox34.0、chrome37.0
+ * */
+function getBrowserNV(){
+    var agent = navigator.userAgent.toLowerCase();
+    var regStr_ie = /msie [\d.]+/gi ;
+    var regStr_ff = /firefox\/[\d.]+/gi
+    var regStr_chrome = /chrome\/[\d.]+/gi ;
+    var regStr_saf = /safari\/[\d.]+/gi ;
+    var browserNV = "";
+    //IE
+    if(agent.indexOf("msie") > 0){
+        browserNV = agent.match(regStr_ie) ;
+    }
+    //firefox
+    if(agent.indexOf("firefox") > 0){
+        browserNV = agent.match(regStr_ff) ;
+    }
+    //Chrome
+    if(agent.indexOf("chrome") > 0){
+        browserNV = agent.match(regStr_chrome) ;
+    }
+    //Safari
+    if(agent.indexOf("safari") > 0 && agent.indexOf("chrome") < 0){
+        browserNV = agent.match(regStr_saf) ;
+    }
+    browserNV = browserNV.toString();
+    //other
+    if(""==browserNV){
+        browserNV  = "Is not a standard browser";
+    }
+    //Here does not display "/"
+    if(browserNV.indexOf('firefox')!= -1 || browserNV.indexOf('chrome')!= -1){
+        browserNV = browserNV.replace("/","");
+    }
+    //Here does not display space
+    if(browserNV.indexOf('msie')!= -1){
+        //msie replace IE & trim space
+        browserNV = browserNV.replace("msie","ie").replace(/\s/g,"");
+    }
+    if(browserNV == "Is not a standard browser"){
+        if(isIENew()){
+            browserNV = "ie11.0";
+        }
+    }
+    //return eg:ie9.0 firefox34.0 chrome37.0
+    return browserNV;
+}
+//IE11
+function isIENew() { //IE
+    if (!!window.ActiveXObject || "ActiveXObject" in window)
+        return true;
+    else
+        return false;
+}
