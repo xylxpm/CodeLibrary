@@ -7,7 +7,7 @@
  */
 
 (function ($) {
-    var laypage = layui.laypage, layer = layui.layer, flow = layui.flow;
+   // var laypage = layui.laypage, layer = layui.layer, flow = layui.flow;
     jQuery.fn.extend({
 
         GetToday: function () {
@@ -689,7 +689,7 @@
             var settings = $.extend(defaults, options);
             var containerIDhash = '#' + settings.containerID;
             $(containerIDhash).hide().click(function () {
-                $('html, body').animate({ scrollTop: 0 }, settings.scrollSpeed, settings.easingType);
+                $('html, body').animate({scrollTop: 0}, settings.scrollSpeed, settings.easingType);
                 $(this).stop().animate({}, settings.inDelay, settings.easingType);
                 return false;
             });
@@ -709,9 +709,9 @@
 
         FollowingRoll: function (options) {
             var defaults = {
-                conTopHeight: 250,/*滚动容器与页面顶部的距离*/
-                conAfterTopHeight: 105,/*滚动容器之后的容器与滚动容器直接的高*/
-                container: $('.js_menudiv'),/*需要跟随的容器*/
+                conTopHeight: 250, /*滚动容器与页面顶部的距离*/
+                conAfterTopHeight: 105, /*滚动容器之后的容器与滚动容器直接的高*/
+                container: $('.js_menudiv'), /*需要跟随的容器*/
                 containerAfter: $(".goods_tab")/*滚动容器之后的容器*/
             };
             var settings = $.extend(defaults, options);
@@ -719,20 +719,113 @@
                 var _scroll = $(window).scrollTop();  //滚动条高度
                 if (_scroll >= settings.conTopHeight) {    //判断当大于等于对象的offsetTop的时候
                     if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) { //针对IE6的判断
-                        settings.container.css({ 'top': _scroll - settings.conTopHeight, 'z-index': '90' });
+                        settings.container.css({'top': _scroll - settings.conTopHeight, 'z-index': '90'});
                     } else {
-                        settings.container.css({ 'position': 'fixed', 'top': '0', 'z-index': '90' });
+                        settings.container.css({'position': 'fixed', 'top': '0', 'z-index': '90'});
                         settings.containerAfter.css("margin-top", settings.conAfterTopHeight);
                     }
                 } else {
                     if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) { //针对IE6的判断
-                        settings.container.css({ 'top': '0' });
+                        settings.container.css({'top': '0'});
                     } else {
-                        settings.container.css({ 'position': 'relative' });
+                        settings.container.css({'position': 'relative'});
                         settings.containerAfter.css("margin-top", 0);
                     }
                 }
             });
+
+        },
+
+        /* 折叠吸顶插件
+         *  页面是列表显示，包含大分类和下属条目，条目初始折叠。滚动时，展开的那个大分类吸顶。页面见0.html
+         *  参数说明
+         *   ObjClass：折叠和吸顶的触发元素，即大分类（class名称）
+         *   Placeholder:占位元素id前缀
+         *   ObjHeight：吸顶元素的高速
+         *   FixClassName : 吸顶效果的class
+         *   ListsClassName：条目的class
+         *   CrrClassName：大分类的icon
+         *
+         * */
+        Sticky: function (options) {
+            var defaults = {
+                ObjClass: '.class-head',
+                Placeholder: "sticky-place",
+                ObjHeight: 60,
+                FixClassName: "fix",
+                ListsClassName:'.weui-cells',
+                CrrClassName:"class-head-icon-crr"
+            };
+            var settings = $.extend(defaults, options);
+
+
+            var $head = null, $next_head = null, btop = 0, titleTop = 0;
+
+            $(settings.ObjClass).off().on('click', function () {
+                $("div[id^=sticky-place]").remove();
+                $(settings.ObjClass).removeAttr('style');
+                var _this = $(this);
+                var _isopen = _this.attr('isopen');
+                $(settings.ObjClass).removeClass(settings.FixClassName);
+                if (_isopen == 0) {
+                    $(settings.ObjClass).attr('isopen', '0');
+                    $(settings.ListsClassName).addClass('hide');
+                    $(settings.ObjClass).find('i').removeClass(settings.CrrClassName);
+                    _this.attr('isopen', '1');
+                    _this.next('div').removeClass('hide');
+                    _this.find('i').addClass(settings.CrrClassName);
+                    $head = _this;
+                    $next_head = _this.next().next();
+                    titleTop = _this.offset().top;
+
+                } else if (_isopen == 1) {
+                    $head = null, $next_head = null;
+                    _this.attr('isopen', '0');
+                    _this.next('div').addClass('hide');
+                    _this.find('i').removeClass(settings.CrrClassName);
+                }
+
+                $(window).scrollTop(titleTop);
+
+            });
+            $(window).scroll(function () {
+                btop = document.body.scrollTop || document.documentElement.scrollTop;
+                if ($head != null) {
+
+                    var nexttop1 = $head.offset().top
+                    var nexttop = $next_head.offset().top - btop;
+
+                    if (btop > titleTop) {
+                        addPlaceholder($head, $head.attr('id'));
+                        $head.addClass(settings.FixClassName);
+                    } else {
+                        $head.removeClass(settings.FixClassName).removeAttr('style');
+                        removePlaceholder($head.attr('id'));
+
+                    }
+
+                    if (nexttop <= settings.ObjHeight) {
+                        $head.css("position", "absolute").css("top", nexttop1 + "px");
+                    } else {
+                        $head.removeAttr('style');
+                    }
+
+                }
+            })
+
+            var addPlaceholder = function (obj, id) {
+                if ($('#'+settings.Placeholder + id).length != 0) {
+                    return;
+                } else {
+                    var width = obj.width(), height = obj.height();
+                    obj.before('<div style="width: ' + width + 'px; height: ' + height + 'px; visibility: hidden;" id="' + settings.Placeholder + id + '"></div>')
+                }
+
+            }
+            var removePlaceholder = function (id) {
+                $('#'+settings.Placeholder + id).remove();
+            };
+
 
         }
 
