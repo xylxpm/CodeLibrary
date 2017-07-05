@@ -7,7 +7,7 @@
  */
 
 (function ($) {
-   // var laypage = layui.laypage, layer = layui.layer, flow = layui.flow;
+    // var laypage = layui.laypage, layer = layui.layer, flow = layui.flow;
     jQuery.fn.extend({
 
         GetToday: function () {
@@ -733,6 +733,32 @@
 
         },
 
+        /* 全角文字改成半角文字 */
+        DBC2SBC: function (options) {
+            var defaults = {
+                str: ""
+            };
+            var settings = $.extend(defaults, options);
+            var result = "";
+            for (var i = 0; i < str.length; i++) {
+                code = settings.str.charCodeAt(i)
+                if (code >= 65281 && code <= 65373) {
+                    var d = settings.str.charCodeAt(i) - 65248;
+                    result += String.fromCharCode(d);
+                }
+                else if (code == 12288)//空格
+                {
+                    var d = settings.str.charCodeAt(i) - 12288 + 32;
+                    result += String.fromCharCode(d);
+                }
+                else {
+                    result += settings.str.charAt(i);
+                }
+            }
+            return result;
+        },
+
+
         /* 折叠吸顶插件
          *  页面是列表显示，包含大分类和下属条目，条目初始折叠。滚动时，展开的那个大分类吸顶。页面见0.html
          *  参数说明
@@ -750,8 +776,8 @@
                 Placeholder: "sticky-place",
                 ObjHeight: 60,
                 FixClassName: "fix",
-                ListsClassName:'.weui-cells',
-                CrrClassName:"class-head-icon-crr"
+                ListsClassName: '.weui-cells',
+                CrrClassName: "class-head-icon-crr"
             };
             var settings = $.extend(defaults, options);
 
@@ -816,7 +842,7 @@
             })
 
             var addPlaceholder = function (obj, id) {
-                if ($('#'+settings.Placeholder + id).length != 0) {
+                if ($('#' + settings.Placeholder + id).length != 0) {
                     return;
                 } else {
                     var width = obj.width(), height = obj.height();
@@ -825,7 +851,7 @@
 
             }
             var removePlaceholder = function (id) {
-                $('#'+settings.Placeholder + id).remove();
+                $('#' + settings.Placeholder + id).remove();
             };
 
 
