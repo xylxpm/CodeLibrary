@@ -160,7 +160,6 @@
             }
             date1.setDate(date1.getDate());
 
-
             var dateArr = [];
             var i = 0;
             while (!(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())) {
@@ -179,8 +178,6 @@
             }
             dateArr.push(Defaults.endData);
             return dateArr;
-
-
         },
 
         SetCookie: function (options) {
@@ -793,18 +790,23 @@
                 if ($head != null) {
 
                     var nexttop1 = $head.offset().top
-                    var nexttop = $next_head.offset().top - btop;
-
-                    if (btop > titleTop) {
-                        addPlaceholder($head, $head.attr('id'));
-                        $head.addClass(settings.FixClassName);
+                    if ($next_head.length != 0) {
+                        var nexttop = $next_head.offset().top - btop;
                     } else {
-                        $head.removeClass(settings.FixClassName).removeAttr('style');
+                        var nexttop = 61
+                    }
+
+
+                    if (btop >= titleTop) {
+                        addPlaceholder($head, $head.attr('id'));
+                        $head.addClass("fix");
+                    } else {
+                        $head.removeClass('fix').removeAttr('style');
                         removePlaceholder($head.attr('id'));
 
                     }
 
-                    if (nexttop <= settings.ObjHeight) {
+                    if (nexttop <= 60) {
                         $head.css("position", "absolute").css("top", nexttop1 + "px");
                     } else {
                         $head.removeAttr('style');
