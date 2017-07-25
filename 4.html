@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="http://web.dg.etiantian.net/ett20/study/ceping/js/jsTools/jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="http://web.dg.etiantian.net/ett20/study/ceping/js/echart/echarts-all.js"></script>
+    <script>
+        $(function(){
+            function drawMychart( pointNameList, rightQuesNumList, wrongQuesNumList, subjectiveQuesNumList,height) {
+                option = {
+                    color: ['#bcd563', '#f18787', '#6ecbfb'],
+                    legend: {
+                        itemGap: 20,
+                        x: '83%',
+                        y: '2%',
+                        itemWidth: 10,
+                        orient: 'vertical',
+                        data:['正确', '错误','主观']
+                    },
+                    calculable : false,
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer : {
+                            type : 'shadow'
+                        }
+                    },
+                    xAxis : [
+                        {
+                            type : 'log',
+                            splitLine: {
+                                show: false
+                            }
+                        }
+
+                    ],
+                    yAxis : [
+                        {
+                            type : 'category',
+                            data : pointNameList,
+                            splitLine: {
+                                show: false
+                            },
+                            axisTick: {
+
+                            },
+                            axisLabel :{
+                                interval:0,
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'正确',
+                            type:'bar',
+                            stack: '总量',
+                            barWidth: 20,
+                            itemStyle : { normal: {label : {show: false, position: 'insideRight'}}},
+                            data:rightQuesNumList,
+                            legendHoverLink: false
+                        },
+                        {
+                            name:'错误',
+                            type:'bar',
+                            stack: '总量',
+                            barWidth: 20,
+                            itemStyle : { normal: {label : {show: false, position: 'insideRight'}}},
+                            data:wrongQuesNumList,
+                            legendHoverLink: false
+                        },
+                        {
+                            name:'主观',
+                            type:'bar',
+                            stack: '总量',
+                            barWidth: 20,
+                            itemStyle : { normal: {label : {show: false, position: 'insideRight'}}},
+                            data:subjectiveQuesNumList,
+                            legendHoverLink: false
+                        }
+                    ],
+                    grid:{
+                        borderWidth: 0,
+                        height:height,
+                        width: '500px',
+                        top:120,
+                        x:  120,
+                        x2: 60,
+                        y: 30,
+                        y2: 30
+
+                    }
+                };
+                var myChart = echarts.init(document.getElementById('main'));
+                myChart.setOption(option);
+            }
+           var  pointNameList=["一元二次方程的解法（二）配方法", "一元二次方程及其解法（一）--直接开平方法"],
+                   rightQuesNumList=[0,0],
+                   wrongQuesNumList=[4, 6],
+                   subjectiveQuesNumList=[0, 0],
+                   floatHeight=undefined
+
+
+            drawMychart( pointNameList, rightQuesNumList, wrongQuesNumList, subjectiveQuesNumList,floatHeight);
+        })
+    </script>
+</head>
+<body>
+<div id="main" style="width: 700px;height: 300px"></div>
+</body>
+</html>

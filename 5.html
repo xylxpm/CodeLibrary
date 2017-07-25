@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="./js/jquery-2.1.4.min.js"></script>
+    <script>
+        $(function () {
+            var lists1 = [
+                {name: "语文", id: 1},
+                {name: "数学", id: 2},
+                {name: "英语", id: 3},
+                {name: "物理", id: 4},
+                {name: "化学", id: 5},
+                {name: "历史", id: 6},
+                {name: "生物", id: 7},
+                {name: "地理", id: 8},
+                {name: "政治", id: 9},
+                {name: "科学", id: 10},
+                {name: "其他", id: 11}
+            ];
+            var lists2 = [
+                {count: 5, subjectId: 1},
+                {count: 14, subjectId: 2},
+                {count: 28, subjectId: 3},
+                {count: 17, subjectId: 4},
+                {count: 21, subjectId: 5},
+                {count: 6, subjectId: 6},
+                {count: 27, subjectId: 7},
+                {count: 9, subjectId: 8},
+                {count: 12, subjectId: 9}
+            ];
+            for (var i = 0; i < lists1.length; i++) {
+                var id1 = lists1[i].id;
+                for (var j = 0; j < lists2.length; j++) {
+                    var id2 = lists2[j].subjectId;
+                    if(id1==id2){
+                        lists1[i].count = lists2[j].count
+                    }
+                }
+            }
+            console.log(lists1);
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>
